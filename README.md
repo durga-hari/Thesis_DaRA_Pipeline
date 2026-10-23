@@ -5,8 +5,8 @@
 ![OpenCV](https://img.shields.io/badge/OpenCV-4.x-5C3EE8?logo=opencv&logoColor=white)
 ![Tests](https://img.shields.io/badge/tests-unittest-brightgreen)
 
-A modular perception pipeline that turns raw multi-camera warehouse video into **2D human
-skeletons with persistent identities**: per person, per frame, and consistent across cameras.
+A modular perception pipeline that  acts on raw multi-camera warehouse video into **2D human
+skeletons with persistent identities**: per person, per frame, and consistent across varied camera views.
 It's built for settings where robots and AGVs share space with people. Safety monitoring,
 ergonomics and human–robot collaboration all need to know *where each person is and how they move*.
 
