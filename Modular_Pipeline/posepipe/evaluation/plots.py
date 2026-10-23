@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Visualization of unsupervised metrics for a single posepipe run (ported from rtmo_metrics_plots.py).
+Visualization of unsupervised metrics for a single posepipe run.
 
 Reads (from --rtmo-root):
   - per_video.csv
@@ -523,7 +523,7 @@ def main():
         "--config-label",
         type=str,
         default="run",
-        help="Label to use in plot titles/legends (e.g. 'RTMO_DeepSORT_OSNet').",
+        help="Label to use in plot titles/legends (e.g. 'rtmpose_osnet_strongsort').",
     )
     parser.add_argument(
         "--out-dir",

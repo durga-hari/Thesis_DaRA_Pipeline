@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 Unsupervised metrics for one run of the modular pipeline (any pose backend).
-Ported from RTMO_DeepSORT_Pipeline/Pipeline/rtmo_evaluation_pipeline_metrics.py;
-the metric definitions are unchanged.
 
 Outputs in the run root:
   - per_track.csv           : per-track metrics (track_len, proxy switch counts)

@@ -1,5 +1,5 @@
 """
-Lightweight StrongSORT-style tracker (ported from RTMO_DeepSORT_Pipeline).
+Lightweight StrongSORT-style tracker.
 
 - constant-velocity Kalman filter on [cx, cy, w, h]
 - IoU gate, then cosine appearance similarity, greedy per detection

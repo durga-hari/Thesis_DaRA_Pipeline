@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 """
-Parameter study runner (ported from RTMO_DeepSORT_Pipeline/rtmo_param_study.py).
+Parameter study runner.
 
-Now pose-backend aware: the pose model comes from the config (or --pose), and
+Pose-backend aware: the pose model comes from the config (or --pose), and
 outputs go to <out_root>/study/<pose>/<variant>/<experiment>/.
 
-Changes from the original:
-- intra_merge_* sweeps are passed to stitching (they had no effect before)
-- windows without --make-clips seek to the window start (start was ignored)
+- every swept parameter (tracker, intra-camera merge, stitching, global filters) is applied
+- windows without --make-clips seek to the window start
 - per-run videos are off unless --keep-videos
 - variants are any <tracker>_<reid> pair (deepsort_resnet, strongsort_osnet,
   deepsort_osnet, strongsort_resnet) or both/all
@@ -446,8 +445,8 @@ def get_experiment_runs(experiment: str) -> List[RunSpec]:
     exp = experiment.lower().strip()
 
     def_intra_e = 0.15
-    def_intra_i = 0.0   # matches configs/default.yaml crosscam.intra_merge (was 0.25, never applied before)
-    def_intra_g = 30    # matches configs/default.yaml (was 75, never applied before)
+    def_intra_i = 0.0   # matches configs/default.yaml crosscam.intra_merge
+    def_intra_g = 30    # matches configs/default.yaml
     def_cos = 0.40
     def_alpha = 0.50
     def_min_gid = 80

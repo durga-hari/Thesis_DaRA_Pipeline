@@ -24,7 +24,7 @@ device: cuda                      # falls back to CPU if CUDA is unavailable
 detector:
   type: yolov8
   yolov8:
-    weights: "checkpoints/yolov8m.pt"   # yolov8s.pt was used by the old AlphaPose pipeline
+    weights: "checkpoints/yolov8m.pt"   # or checkpoints/yolov8s.pt for a lighter, faster detector
     conf: 0.25
     iou: 0.5
     imgsz: 640
@@ -38,7 +38,7 @@ pose:
   rtmpose:                        # RTMPose-L COCO-WholeBody 384x288, 133 joints
     cfg: "checkpoints/rtmpose/rtmpose-l_8xb32-270e_coco-wholebody-384x288.py"
     ckpt: "checkpoints/rtmpose/rtmpose-l_simcc-coco-wholebody_pt-aic-coco_270e-384x288-eaeb96c8_20230125.pth"
-    input_color: bgr              # 'rgb' reproduces the old RTMO pipeline (it fed RGB to MMPose)
+    input_color: bgr              # MMPose expects BGR; 'rgb' only for compatibility experiments
   alphapose:                      # AlphaPose HRNet-W32 256x192, COCO-17
     cfg: "externals/AlphaPose/configs/coco/hrnet/256x192_w32_lr1e-3.yaml"
     ckpt: "checkpoints/alphapose/hrnet_w32_256x192.pth"

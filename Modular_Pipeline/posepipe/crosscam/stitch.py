@@ -1,5 +1,5 @@
 """
-Cross-camera hybrid union-find stitching (ported from RTMO_DeepSORT_Pipeline).
+Cross-camera hybrid union-find stitching.
 
 1. Per camera: read <cam>/results.jsonl, drop very short tracks, average and
    L2-normalise each track's embedding, average its pose.
@@ -10,12 +10,9 @@ Cross-camera hybrid union-find stitching (ported from RTMO_DeepSORT_Pipeline).
    match above cos_thr, union-find for transitivity.
 4. Write crosscam_map.json  {cam_dir: {local_track_id: global_id}}.
 
-Fixes relative to the original script:
-- The map is keyed by the *original* local track IDs. The old version keyed
-  it by the index of the merged group ("0", "1", ...), so inject_global_ids
-  attached global IDs to the wrong local tracks.
-- The intra-merge thresholds come from the config / param study; they were
-  hard-coded (0.85 similarity, 30 frames) and the IoU gate did not exist.
+The map is keyed by the real local track IDs (every member of a merged
+fragment group gets the group's global ID), and the intra-merge thresholds
+come from the config / parameter study.
 """
 
 from __future__ import annotations

@@ -3,8 +3,8 @@ RTMPose (MMPose 1.x) as a top-down backend, e.g. RTMPose-L COCO-WholeBody 384x28
 
 Uses mmpose.apis.init_model + inference_topdown directly (no MMDet needed).
 MMPose's data preprocessor expects BGR input (it does bgr_to_rgb itself), so
-frames are passed as read by OpenCV. Set `input_color: rgb` only to reproduce
-the old RTMO_DeepSORT_Pipeline results, which fed RGB frames.
+frames are passed as read by OpenCV (`input_color: rgb` is kept only for
+compatibility experiments).
 """
 
 from __future__ import annotations

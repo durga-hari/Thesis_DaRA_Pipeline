@@ -1,4 +1,4 @@
-# The stack of the former RTMO_DeepSORT_Pipeline:
+# RTMPose stack:
 # RTMPose-L WholeBody (133 joints) + ResNet-50 + DeepSORT
 pose:    {type: rtmpose}
 reid:    {type: resnet50}
