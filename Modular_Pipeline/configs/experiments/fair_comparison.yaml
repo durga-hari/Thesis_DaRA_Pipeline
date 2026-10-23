@@ -1,0 +1,8 @@
+# Layer on top of any pose choice to compare pose backends like for like:
+#   python -m posepipe run --config configs/experiments/fair_comparison.yaml -o pose.type=alphapose
+#   python -m posepipe run --config configs/experiments/fair_comparison.yaml -o pose.type=rtmpose
+# Same detector boxes, same 17 body joints, same ReID and tracker.
+pipeline:
+  keypoint_format: coco17
+reid:    {type: osnet}
+tracker: {type: deepsort}

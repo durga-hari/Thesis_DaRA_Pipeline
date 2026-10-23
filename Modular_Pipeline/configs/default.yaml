@@ -1,0 +1,107 @@
+# =============================================================================
+# Modular pose-tracking pipeline - base configuration
+#
+# Each stage has a `type:` toggle plus one settings block per backend. Only the
+# block named by `type` is used, so switching is a one-word change:
+#
+#   python -m posepipe list                         # available components
+#   python -m posepipe run -o pose.type=alphapose   # toggle from the CLI
+#   python -m posepipe run -o pose.type=rtmpose -o reid.type=osnet -o tracker.type=strongsort
+#   python -m posepipe run --config configs/experiments/alphapose_stack.yaml
+#
+# Relative paths are resolved against the project root.
+# =============================================================================
+
+video_dir: "data/videos"          # folder of per-camera videos (one file per camera)
+# videos: [data/videos/FC3.mp4]   # ...or an explicit list (overrides video_dir)
+out_root: "outputs"               # results go to <out_root>/<run_name>/
+run_name: auto                    # auto -> <pose>_<reid>_<tracker>
+device: cuda                      # falls back to CPU if CUDA is unavailable
+
+# -----------------------------------------------------------------------------
+# Detector (shared by every pose backend, so comparisons use identical boxes)
+# -----------------------------------------------------------------------------
+detector:
+  type: yolov8
+  yolov8:
+    weights: "checkpoints/yolov8m.pt"   # yolov8s.pt was used by the old AlphaPose pipeline
+    conf: 0.25
+    iou: 0.5
+    imgsz: 640
+    max_det: 300
+
+# -----------------------------------------------------------------------------
+# Pose estimator:  alphapose | rtmpose
+# -----------------------------------------------------------------------------
+pose:
+  type: rtmpose
+  rtmpose:                        # RTMPose-L COCO-WholeBody 384x288, 133 joints
+    cfg: "checkpoints/rtmpose/rtmpose-l_8xb32-270e_coco-wholebody-384x288.py"
+    ckpt: "checkpoints/rtmpose/rtmpose-l_simcc-coco-wholebody_pt-aic-coco_270e-384x288-eaeb96c8_20230125.pth"
+    input_color: bgr              # 'rgb' reproduces the old RTMO pipeline (it fed RGB to MMPose)
+  alphapose:                      # AlphaPose HRNet-W32 256x192, COCO-17
+    cfg: "externals/AlphaPose/configs/coco/hrnet/256x192_w32_lr1e-3.yaml"
+    ckpt: "checkpoints/alphapose/hrnet_w32_256x192.pth"
+    batch_size: 64
+    fp16: false
+
+# -----------------------------------------------------------------------------
+# ReID:  osnet | resnet50     (weights: a ReID checkpoint, or 'imagenet')
+# -----------------------------------------------------------------------------
+reid:
+  type: resnet50
+  resnet50:
+    weights: "checkpoints/reid/resnet50_market_xent.pth.tar"
+  osnet:
+    model_name: osnet_x1_0
+    weights: "checkpoints/reid/osnet_x1_0_msmt17.pth"   # checkpoints/osnet_x1_0_imagenet.pt is NOT ReID-trained
+
+# -----------------------------------------------------------------------------
+# Tracker:  deepsort | strongsort
+# -----------------------------------------------------------------------------
+tracker:
+  type: deepsort
+  deepsort:
+    max_cosine_distance: 0.2
+    max_iou_distance: 0.7
+    max_age: 30
+    n_init: 3
+  strongsort:                     # same key names as DeepSORT, mapped internally:
+    max_cosine_distance: 0.45     #   -> sim_thr (minimum cosine SIMILARITY to match)
+    max_iou_distance: 0.3         #   -> iou_thr (minimum IoU gate)
+    max_age: 60                   #   -> ttl
+
+# -----------------------------------------------------------------------------
+# Per-camera processing
+# -----------------------------------------------------------------------------
+pipeline:
+  # native: keep the backend's joints (RTMPose-WB 133, HRNet 17)
+  # coco17: slice to the 17 COCO body joints (use this to compare backends)
+  keypoint_format: native
+  kpt_thresh: 0.6                 # drop a person if mean joint conf < max(kpt_thresh, min_mean_kp_conf)
+  min_mean_kp_conf: 0.55          # NB: joint confidences are not calibrated across backends
+  min_box_area_ratio: 0.002       # drop boxes smaller than this fraction of the frame
+  min_track_length: 120           # drop local tracks shorter than this (frames)
+  start_frame: 0
+  max_frames: -1                  # -1 = whole video
+  draw: true
+  save_video: true
+  save_json: true
+  annotate_ids: true              # render <cam>_localids.mp4 / <cam>_globalids.mp4
+  log_every: 100
+
+# -----------------------------------------------------------------------------
+# Cross-camera identity stitching
+# -----------------------------------------------------------------------------
+crosscam:
+  enabled: true
+  cos_thr: 0.4                    # hybrid similarity threshold for a cross-camera match
+  alpha: 0.5                      # weight of ReID vs pose similarity
+  min_frames: 3
+  intra_merge:                    # fragment merging inside one camera before matching
+    emb_thr: 0.15                 # max cosine DISTANCE between mean embeddings (0.15 == similarity 0.85)
+    time_gap: 30                  # max frames between end of one fragment and start of the next
+    iou_thr: 0.0                  # >0 also requires boundary-box IoU >= this
+  global_merge:
+    min_frames_per_gid: 80
+    require_multi_cam: false

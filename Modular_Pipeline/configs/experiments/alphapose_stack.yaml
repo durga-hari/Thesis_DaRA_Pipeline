@@ -1,0 +1,5 @@
+# The stack of the former AlphaPose_OSNet_Pipeline:
+# AlphaPose HRNet-W32 (COCO-17) + OSNet + StrongSORT-style tracker
+pose:    {type: alphapose}
+reid:    {type: osnet}
+tracker: {type: strongsort}

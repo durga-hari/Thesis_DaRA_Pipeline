@@ -1,0 +1,30 @@
+# model weights (see checkpoints/README.md)
+checkpoints/**
+!checkpoints/README.md
+*.pth
+*.pth.tar
+*.pt
+*.onnx
+*.weights
+
+# data and results
+data/
+outputs/
+
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.env/
+
+# AlphaPose build artefacts
+externals/AlphaPose/build/
+externals/AlphaPose/exp/
+externals/AlphaPose/**/*.so
+externals/AlphaPose/**/*.pyd
+
+# editors / OS
+.vscode/
+.idea/
+.DS_Store
