@@ -5,9 +5,8 @@
 ![OpenCV](https://img.shields.io/badge/OpenCV-4.x-5C3EE8?logo=opencv&logoColor=white)
 ![Tests](https://img.shields.io/badge/tests-unittest-brightgreen)
 
-modular end-to-end pipeline capable of extracting temporally consistent human skeletons from
-raw multi-camera video data recorded in real-world warehouse environments per person, per frame, and consistent across varied camera views.
-It's built for settings where robots and AGVs share space with people. Safety monitoring,
+A modular end-to-end pipeline that extracts temporally consistent human skeletons from raw multi-camera video recorded in real-world warehouse environments. It tracks each person in every frame and keeps their identity consistent across camera views..
+It's built as a  development tool in the direction to address a setting where robots and AGVs share space with people. Safety monitoring,
 ergonomics and human–robot collaboration all need to know *where each person is and how they move*.
 
 Developed as my Master's thesis in Automation and Robotics at **TU Dortmund University**
